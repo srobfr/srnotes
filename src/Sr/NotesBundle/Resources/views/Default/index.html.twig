@@ -1,0 +1,61 @@
+{% extends "SrNotesBundle::base.html.twig" %}
+
+{% block page %}
+{% set numPuce = 1 %}
+
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Videz-vous la tête</b> : rassemblez tous les nouveaux projets, documents, tâches, idées et concepts dans votre inbox :<br>
+    <div style="display: inline-block;">
+        <form method="post" action="{{ path('sr_notes_note_save', {}) }}">
+            <input placeholder="+ Inbox" type="text" name="titre">
+            <input type="hidden" name="parentId" value="1">
+            <input type="hidden" name="type" value="1">
+            <input type="hidden" name="redirTo" value="{{ path('sr_notes_default_index') }}">
+        </form>
+    </div>
+</p>
+
+{% if inbox|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Triez votre inbox</b> afin de différencier les tâches, projets, références et rangez-les dans votre arborescence. N'oubliez pas de leur attribuer des tags afin de les retrouvez plus facilement.<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':inbox, 'r': '^1' } %}
+</p>
+{% endif %}
+
+{% if enAttente|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Vérifiez les {{ enAttente|length }} tâches</b> qui sont en attente<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':enAttente } %}
+</p>
+{% endif %}
+
+{% if ouvertes|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Vérifiez les {{ ouvertes|length }} tâches</b> actuellement ouvertes<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':ouvertes } %}
+</p>
+{% endif %}
+
+{% if projetsSansProchaineTache|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Attribuez des prochaines tâches</b> aux {{ projetsSansProchaineTache|length }} projets qui n'en ont pas de définie<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':projetsSansProchaineTache } %}
+</p>
+{% endif %}
+
+{% if projetsSansTacheOuverte|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) Clôturez les {{ projetsSansTacheOuverte|length }} projets</b> qui n'ont aucune tâche en cours<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':projetsSansTacheOuverte } %}
+</p>
+{% endif %}
+
+{% if tachesAvecDateLimite|length >0 %}
+<p>
+    <b>{{ numPuce }}{% set numPuce = numPuce + 1 %}) (Re)prenez connaissance</b> des {{ tachesAvecDateLimite|length }} tâches comportant une date limite<br>
+    {% include "SrNotesBundle:Search:liste.html.twig" with { 'notes':tachesAvecDateLimite } %}
+</p>
+{% endif %}
+
+{% endblock %}
+

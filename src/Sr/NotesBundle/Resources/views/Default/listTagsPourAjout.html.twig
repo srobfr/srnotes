@@ -1,0 +1,5 @@
+<span style="font-size: x-small;">
+{% for tag in tags %}
+    <a href="javascript:$('#tags').val($('#tags').val() + ($('#tags').val()=='' ? '':', ') + '{{ tag.titre }}')" class="tag" style="background-color: #{{ tag.couleur }}">{{ tag.titre }}</a>
+{% endfor %}
+</span>

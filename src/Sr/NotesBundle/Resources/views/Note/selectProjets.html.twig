@@ -1,0 +1,7 @@
+<select name='parents' id='parents' onchange="$('#parentId').val(this.value)">
+    <option value=''></option>
+
+    {% for projet in projets %}
+        <option value='{{ projet.id }}' {% if note.parent and note.parent.id == projet.id %}selected='selected'{% endif %}>{{ projet.getBreadCrumb(true) }}</option>
+    {% endfor %}
+</select>

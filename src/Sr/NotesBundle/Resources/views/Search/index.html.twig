@@ -1,0 +1,5 @@
+{% extends "SrNotesBundle::base.html.twig" %}
+
+{% block page %}
+    {{ render(controller("SrNotesBundle:Search:liste", { "s": s, "q": q, "r": r })) }}
+{% endblock %}

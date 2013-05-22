@@ -1,0 +1,79 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+{{ parent() }}
+    <link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="{{ asset('bundles/srnotes/js/main.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+{# Barre de gauche #}
+<table class="layoutGlobal">
+    <tr>
+        <td class="leftBar">
+            <div class="leftBar">
+                <div>
+                    <form method="get" action="{{ path('sr_notes_search_index') }}" style="display: inline">
+                        <input placeholder="Chercher" type="text" name="s" value="{{ s | default('') }}">
+                    </form>
+                    <form method="get" action="{{ path('sr_notes_search_index') }}" style="display: inline">
+                        <input placeholder="R.Avancée" type="text" name="r" size="7" value="{{ r | default('') }}">
+                    </form>
+                </div>
+
+                {{ render(controller('SrNotesBundle:Default:raccourcis')) }}
+
+                <div style="font-size: smaller; text-align: right; font-style: italic;">
+                    <a href="{{ path('sr_notes_search_index', {'r': "#srnotes&%_raccourcis%"} ) }}">éditer</a>
+                </div>
+
+                <hr/>
+
+                <div>
+                    <h1>Tags</h1>
+                    <div>
+                        {{ render(controller('SrNotesBundle:Default:listtags')) }}
+                    </div>
+                </div>
+                <br>
+
+            </div>
+        </td>
+        <td>
+            <div class="container">
+                <div class="topBar">
+
+                    <div style="display: inline-block;">
+                        <form method="post" action="{{ path('sr_notes_note_save', {}) }}">
+                            <input placeholder="+ Inbox" type="text" name="titre">
+                            <input type="hidden" name="parentId" value="1">
+                            <input type="hidden" name="type" value="1">
+                            <input type="hidden" name="redirToNote" value="1">
+                        </form>
+                    </div>
+
+                    <div style="display: inline-block; float:right; padding: 5px">
+                        <div class="chrono">{{ render(controller('SrNotesBundle:Note:chrono')) }}</div>
+
+                        <span style="font-size: 70%; margin-right: 20px;">{{ render(controller('SrNotesBundle:Default:stats')) }}</span>
+                        <a href="http://scripts.srob.fr/SrNotes/Index" style="margin-right: 30px; font-weight: bold; text-decoration: none; color: black;">SrNotes 1.0</a>
+                        <a href="http://scripts.srob.fr/SrNotes/Aide" target="_blank">Aide</a>
+                    </div>
+
+                    {% if app.session.hasFlash('notification') %}
+                        <div class="notif">{{ app.session.flash('notification') }}</div>
+                    {% endif %}
+
+                </div>
+
+                <div class="page">
+                    {% block page %}
+                    {% endblock %}
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "SrNotesBundle::base.html.twig" %}
+
+{% block page %}
+    {% include "SrNotesBundle:Default:saisieNote.html.twig" with { "note": note, 'enfants': enfants } %}
+
+{% endblock %}

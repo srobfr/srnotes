@@ -1,0 +1,216 @@
+{# Utile pour affichier un preview Markdown #}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{{ asset('bundles/srnotes/js/showdown.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/srnotes/js/jquery.autosize.js') }}"></script>
+<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
+
+<div id="divSaisie">
+    <div class="breadCrumb" id="breadCrumb">
+        <a href="{{ note.parent ? path('sr_notes_note_index', { 'id': note.parent.id } ) : '' }}" id="aBreadCrumb">&lt;= Parent :</a>
+        {{ render(controller("SrNotesBundle:Note:selectProjets", {'noteId' : note.id })) }}
+    </div>
+
+    <input type="hidden" id="parentId" value="{{ note.parent ? note.parent.id : '' }}">
+
+    <div class="divChronoDroite">
+        <input type="radio" name="type" id="typeTache" {{ note.type == 1 ? 'checked="checked"':'' }}>
+        <label for="typeTache" class="type">Tâche</label>
+
+        <input type="radio" name="type" id="typeReference" {{ note.type == 2 ? 'checked="checked"':'' }}>
+        <label for="typeReference" class="type">Référence</label>
+
+        <input type="radio" name="type" id="typeProjet" {{ note.type == 3 ? 'checked="checked"':'' }}>
+        <label for="typeProjet" class="type">Projet</label>
+
+        {# Dates ouverture => Fermeture #}
+        <span>[{{ note.dateCreation.format('Y-m-d H:i:s') }}{% if note.pcAvancement >= 100 and note.dateFermeture %} => {{ note.dateFermeture.format('Y-m-d H:i:s') }}{% endif %}]</span>
+
+        {# Chrono #}
+        <a href="#" class="startChrono">
+            Chrono :
+            <span class="timer{{ note.id }}">
+            <script type="text/javascript">
+                document.write(timeToCountDown({{ note.dureeReelle | default('0')}}));
+            </script>
+            </span>
+        </a>
+
+        <script type="text/javascript">
+            $(function(){
+                $('.startChrono').on('click', function(event){
+                    event.preventDefault();
+
+                    // On appelle l'ajax qui démarre le chrono
+                    startChrono({{ note.id }});
+                });
+            });
+        </script>
+
+        <span>Terminée :</span>
+
+        <span style="display:none" id="labelPcAvancement">{{ note.pcAvancement | default("0") }} %</span>
+        <input type="hidden" name="pcAvancement" id="pcAvancement" value="{{ note.pcAvancement | default("0") }}">
+        <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
+    </div>
+
+    <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
+    <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
+
+    <input type="checkbox" name="prochaine" id="prochaine" {{ note.prochaine ? 'checked="checked"' : '' }}><label for="prochaine">Prochaine</label>
+
+    <input type="checkbox" name="enAttente" id="enAttente" {{ note.enAttente ? 'checked="checked"' : '' }}><label for="enAttente">En attente</label>
+
+    <input type="date" name="dateLimite" id="dateLimite" value="{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}"><label for="dateLimite">Date limite</label>
+
+
+
+    <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+    <span onclick="javascript:$('#tagsPourAjout').toggle(200);" style="cursor: pointer">+</span>
+
+    <span id="tagsPourAjout" style="display:none">
+        {% render controller("SrNotesBundle:Default:listTagsPourAjout") %}
+    </span>
+
+    <input type="button" id="btnEnregistrer" value="Enregistrer" onclick="enregistrer()" title="Raccourci : Ctrl+S">
+
+    <form style="display: inline" method="post" action="{{ path('sr_notes_note_save') }}" id="formSousNote">
+        <input id="champSaisieSousNote" placeholder="Créer une sous note" type="text" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
+        <input type="hidden" name="parentId" value="{{ note.id }}">
+        <input type="hidden" name="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+        <input type="hidden" name="type" value="1">
+        <input type="hidden" name="redirToNote" id="redirToNoteInput" value="1">
+
+        <a href="#" class="openMarkdownPreview">Preview Markdown</a>
+
+        <script>
+            $(function(){
+                $('#champSaisieSousNote').keydown(function (e) {
+                    if (e.ctrlKey && e.keyCode == 13) {
+                        // Ctrl-Enter
+                        $('#redirToNoteInput').attr('name', 'redirTo').val('{{ path('sr_notes_note_index', {'id':note.id}) }}');
+                        $('#formSousNote').submit();
+                    }
+                });
+            });
+        </script>
+    </form>
+
+    <div class="file-uploader"></div>
+
+    {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
+    <script type="text/javascript">
+        // Enable the file uploader
+        $(function() {
+            new PunkAveFileUploader({
+                'uploadUrl': {{ path('upload', { "id": note.id }) | json_encode | raw }},
+                'viewUrl': {{ (app.request.basePath ~ '/uploads/' ~ note.id) | json_encode | raw }},
+                'el': '.file-uploader',
+                'existingFiles': {{ files | json_encode | raw }},
+                'errorCallback': function( info ) { alert("Error : " + info.error); }
+            });
+        });
+    </script>
+
+</div>
+
+{# La liste des enfants de cette note #}
+{% if enfants|length > 0 %}
+<br>
+    {{ render(controller("SrNotesBundle:Search:liste", { "s": null, "q": null, "r": "!C&^"~note.id })) }}
+{% endif %}
+
+<script type="text/javascript">
+    $(function(){
+
+        $('.openMarkdownPreview').on('click', function() {
+            // Ouvre le popup
+            var win = window.open('about:blank', '_blank', "location=no,menubar=no");
+            win.document.write('<!DOCTYPE HTML><html lang="fr-FR"><head><meta charset="UTF-8"><title>Preview Markdown</title><link href="{{ app.request.scheme ~  '://' ~  app.request.host ~ asset('bundles/srnotes/css/markdown.css') }}" type="text/css" rel="stylesheet"/></head><body>test</body></html>');
+
+            // Installe le handler pour mettre à jour le contenu du popup
+            var descriptionChangeHandler = function(event) {
+                if(event) event.preventDefault();
+                var converter = new Showdown.converter();
+                win.document.body.innerHTML = converter.makeHtml($('#description').val());
+            };
+
+            $('#description')
+                    .on('keyup', descriptionChangeHandler)
+                    .on('change', descriptionChangeHandler);
+            descriptionChangeHandler();
+        });
+    });
+
+    function enregistrer() {
+        var data = {
+            id: {{ note.id }},
+            titre:$('#titre').val(),
+            note:$('#description').val(),
+            parentId: $('#parentId').val(),
+            prochaine:$('#prochaine').attr('checked') == 'checked',
+            enAttente:$('#enAttente').attr('checked') == 'checked',
+            dateLimite:$('#dateLimite').val(),
+            pcAvancement:$('#pcAvancement').val(),
+            tags:$('#tags').val(),
+            type: ($('#typeTache').attr('checked') == 'checked' ? 1
+                    : ($('#typeReference').attr('checked') == 'checked' ? 2
+                        : ($('#typeProjet').attr('checked') == 'checked' ? 3 : 0)))
+        };
+
+        $('#btnEnregistrer').val("En cours d'enregistrement...");
+
+        $.ajax("{{ path('sr_notes_note_save') }}", {
+            type: "POST",
+            data: data,
+            success: function(data) {
+                $('#btnEnregistrer').val("Enregistré.");
+                window.setTimeout(function(){
+                    $('#btnEnregistrer').val("Enregistrer");
+                }, 3000);
+            }
+        });
+    }
+
+    function tacheCompletee() {
+        $('#titre').css('text-decoration', 'line-through');
+    }
+
+    function tacheRouverte() {
+        $('#titre').css('text-decoration', 'none');
+    }
+
+    $(function(){
+        $('#pcAvancement').change(function(){
+            if(this.value == 100 && $('#labelPcAvancement').html() != '100 %') {
+                // Complétée
+                tacheCompletee();
+
+            } else if(this.value != 100 && $('#labelPcAvancement').html() == '100 %') {
+                // Rouverte
+                tacheRouverte();
+            }
+
+            $('#labelPcAvancement').html(this.value + " %");
+        });
+
+        $('#chkBxTermine').change(function(){
+            $('#pcAvancement').val($('#chkBxTermine').attr('checked')==='checked' ? 100 : 0);
+            $('#pcAvancement').change();
+        });
+
+        // Capture de Ctrl+S
+        $(document).keydown(function(e) {
+            if(e.ctrlKey && e.keyCode == 83/*S*/) {
+                enregistrer();
+                return false;
+            }
+            return true;
+        });
+
+        $('#description').autosize();
+    });
+
+
+</script>

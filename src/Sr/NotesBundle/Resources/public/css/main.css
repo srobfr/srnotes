@@ -1,0 +1,141 @@
+body {
+    font-family: Verdana;
+    font-size: small;
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table.layoutGlobal {
+    width: 100%;
+}
+
+table.layoutGlobal tr, table.layoutGlobal td, table.layoutGlobal th {
+    border-width: 0px;
+    vertical-align: top;
+    padding: 0;
+}
+
+table.liste th, table.liste td {
+    border: 1px solid gray;
+    padding: 0px 5px 0px 5px;
+}
+
+table.liste th {
+    border: 1px solid gray;
+    padding: 0px 5px 0px 5px;
+    background-color: #d5e2ff;
+}
+
+.leftBar {
+    width: 270px;
+    height: 100%;
+    background-color: #ebeeff;
+    padding: 10px;
+}
+
+.leftBar h1 {
+    font-size: 14px;
+}
+
+.container {
+    width: 100%;
+    margin: 0;
+}
+
+.topBar {
+    background-color: #ebeeff;
+    padding: 5px 0 5px 0;
+}
+
+.notif {
+    background-color: #ffef8a;
+    margin-top: 5px;
+    padding: 3px;
+}
+
+.page {
+    padding: 10px;
+}
+
+.chrono {
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.titreComplete {
+    text-decoration: line-through;
+}
+
+.deadlineOrange {
+    color: #ff7b1c;
+}
+
+.deadlineRouge {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.saisieNote {
+    width: 100%;
+}
+
+.tdDescription {
+    width: 100%;
+}
+
+.inputTitre {
+    width: 100%;
+}
+
+.inputDescription {
+    width: 100%;
+    height: 100px;
+    max-height: 800px;
+}
+
+.breadCrumb {
+    display: inline-block;
+}
+
+.divChronoDroite {
+    float:right;
+    display: inline-block;
+}
+
+.spanInfosDuree {
+    font-size: x-small;
+}
+
+.type {
+    font-weight: bold;
+}
+
+.tag {
+    color: black;
+    text-decoration: none;
+    font-size: 10px;
+}
+
+.chrono {
+    display: inline-block;
+}
+
+.chronoContent {
+    background-color: #333333;
+    color: white;
+    padding: 3px;
+}
+
+.chronoContent a {
+    color: white;
+}
+
+/* File uploads */
+.file-uploader { background-color: #dfdfdf; border: 1px solid #696969}
+.file-uploader ul { margin: 3px; padding: 0 }
+.file-uploader li { display: inline-block; margin: 5px}
+.file-uploader img { vertical-align: middle; }
+.file-uploader .caption { display: inline-block; }

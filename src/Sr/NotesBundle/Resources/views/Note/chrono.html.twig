@@ -1,0 +1,46 @@
+{% if note is defined and note is not null %}
+    <span class="chronoContent">
+        <a href="{{ path('sr_notes_note_index', {'id': note.id }) }}">{{ note.titre }}</a> : <span class="timer{{ note.id }}"></span> (<a href="#" class="stopChrono">stop</a>)
+    </span>
+{% endif %}
+
+<script type="text/javascript">
+    var updateTimerinterval = null;
+
+    {% if note is defined and note is not null %}
+    var baseTimer = {{ timer | default(0) }};
+    var baseTime = Math.floor(new Date().getTime() / 1000);
+
+    $(function(){
+        $('.stopChrono').on('click', function() {
+            $.ajax({
+                url: '{{ path('sr_notes_note_chronostop') }}',
+                dataType: 'html',
+                success: function(data) {
+                    clearInterval(updateTimerinterval);
+                    $('.chrono').html(data);
+                }
+            })
+        });
+
+        var updateTimer = function() {
+            var timer = Math.floor(new Date().getTime() / 1000) - baseTime + baseTimer;
+            $('.timer{{ note.id }}').html(timeToCountDown(timer));
+        };
+        updateTimer();
+
+        updateTimerinterval = setInterval(updateTimer, 1000);
+    });
+    {% endif %}
+
+    startChrono = function(idNote) {
+        $.ajax({
+            url: '{{ path('sr_notes_note_chronostart', {'id': '9999999999999999'}) }}'.replace('9999999999999999', idNote),
+            dataType: 'html',
+            success: function(data) {
+                clearInterval(updateTimerinterval);
+                $('.chrono').html(data);
+            }
+        });
+    };
+</script>

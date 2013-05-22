@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e3d14ffd5f43d9879c34d4f01c9c9cf4",
+    "hash": "57e36eef57a893371829ba686ac13554",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1188,6 +1188,66 @@
             "time": "2012-12-21 11:40:51"
         },
         {
+            "name": "punkave/symfony2-file-uploader-bundle",
+            "version": "dev-master",
+            "target-dir": "PunkAve/FileUploaderBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/punkave/symfony2-file-uploader-bundle",
+                "reference": "455fb7f728f20015cfc76479a3797c9a4f722507"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/punkave/symfony2-file-uploader-bundle/zipball/455fb7f728f20015cfc76479a3797c9a4f722507",
+                "reference": "455fb7f728f20015cfc76479a3797c9a4f722507",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": [
+
+                ]
+            },
+            "autoload": {
+                "psr-0": {
+                    "PunkAve\\FileUploaderBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Boutell",
+                    "email": "tom@punkave.com"
+                },
+                {
+                    "name": "Wes John-Alder",
+                    "email": "wes@punkave.com"
+                }
+            ],
+            "description": "Multiple file uploads for Symfony2 with the BlueImp uploader. Also scales uploaded images",
+            "homepage": "https://github.com/punkave/symfony2-file-uploader-bundle",
+            "keywords": [
+                "Image transform",
+                "Symfony Bundle",
+                "blueimp",
+                "bundle",
+                "file",
+                "multiple file upload",
+                "punkave",
+                "symfony",
+                "upload",
+                "uploader"
+            ],
+            "time": "2012-09-27 18:49:10"
+        },
+        {
             "name": "sensio/distribution-bundle",
             "version": "v2.2.1",
             "target-dir": "Sensio/Bundle/DistributionBundle",
@@ -1756,9 +1816,9 @@
 
     ],
     "minimum-stability": "alpha",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "punkave/symfony2-file-uploader-bundle": 20
+    },
     "platform": {
         "php": ">=5.3.3"
     },

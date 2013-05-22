@@ -1,0 +1,8 @@
+# Change this to your own values to protect your notes
+#AuthName "Protected Area"
+#AuthType Basic
+#AuthUserFile /yourPath/.htpasswd
+#require valid-user
+
+#RewriteEngine On
+#RewriteRule ^(.*)$ web/$1 [QSA,L]
