@@ -1,79 +1,88 @@
 {% extends "::base.html.twig" %}
 
 {% block stylesheets %}
-{{ parent() }}
-    <link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>
-    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    {{ parent() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ asset('bundles/srnotes/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+    
+    <!--<link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>-->
+    <style>
+        .navbar {
+            min-height: 30px;
+        }
+
+        .navbar-brand,
+        .navbar-nav > li > a {
+            line-height: 0;
+        }
+
+        .navbar-form, .navbar-text { margin-top: 4px; margin-bottom: 3px; display: inline-block }
+        .form-control { padding: 0 5px; height: auto; }
+        .navbar .btn { padding: 0 5px; }
+        .navbar { border-radius: 0 }
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="{{ asset('bundles/srnotes/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/srnotes/js/main.js') }}"></script>
 {% endblock %}
 
 {% block body %}
 
-{# Barre de gauche #}
-<table class="layoutGlobal">
-    <tr>
-        <td class="leftBar">
-            <div class="leftBar">
-                <div>
-                    <form method="get" action="{{ path('sr_notes_search_index') }}" style="display: inline">
-                        <input placeholder="Chercher" type="text" name="s" value="{{ s | default('') }}">
-                    </form>
-                    <form method="get" action="{{ path('sr_notes_search_index') }}" style="display: inline">
-                        <input placeholder="R.Avancée" type="text" name="r" size="7" value="{{ r | default('') }}">
-                    </form>
-                </div>
+    {# Barre de navigation #}
+    <div class="navbar navbar-inverse">
+        <a class="navbar-brand" href="#">ziNotes</a>
 
-                {{ render(controller('SrNotesBundle:Default:raccourcis')) }}
+        <form class="navbar-form">
+            <input type="text" class="form-control" style="width: 200px;" placeholder="Recherche textuelle">
+        </form>
+        
+        <form class="navbar-form">
+            <input type="text" class="form-control" style="width: 150px;" placeholder="Recherche avancée">
+        </form>
 
-                <div style="font-size: smaller; text-align: right; font-style: italic;">
-                    <a href="{{ path('sr_notes_search_index', {'r': "#srnotes&%_raccourcis%"} ) }}">éditer</a>
-                </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Perso <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Prochaines tâches</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Projets ouverts</a></li>
+            </ul>
+        </div>
 
-                <hr/>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Pro <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Blah blah</a></li>
+            </ul>
+        </div>
 
-                <div>
-                    <h1>Tags</h1>
-                    <div>
-                        {{ render(controller('SrNotesBundle:Default:listtags')) }}
-                    </div>
-                </div>
-                <br>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Inbox</a></li>
+            <li><a href="#">Liste de courses</a></li>
+        </ul>
 
-            </div>
-        </td>
-        <td>
-            <div class="container">
-                <div class="topBar">
+        <form class="navbar-form">
+            <input type="text" class="form-control" style="width: 100px;" placeholder="+Inbox">
+        </form>
 
-                    <div style="display: inline-block;">
-                        <form method="post" action="{{ path('sr_notes_note_save', {}) }}">
-                            <input placeholder="+ Inbox" type="text" name="titre">
-                            <input type="hidden" name="parentId" value="1">
-                            <input type="hidden" name="type" value="1">
-                            <input type="hidden" name="redirToNote" value="1">
-                        </form>
-                    </div>
+        <form class="navbar-form">
+            <input type="text" class="form-control" style="width: 100px;" placeholder="+Courses">
+        </form>
 
-                    <div style="display: inline-block; float:right; padding: 5px">
-                        <div class="chrono">{{ render(controller('SrNotesBundle:Note:chrono')) }}</div>
+        <p class="navbar-text pull-right">
+            <a href="#" class="navbar-link">Aide</a>
+        </p>
+    </div>
 
-                        <span style="font-size: 70%; margin-right: 20px;">{{ render(controller('SrNotesBundle:Default:stats')) }}</span>
-                        <a href="http://scripts.srob.fr/SrNotes/Index" style="margin-right: 30px; font-weight: bold; text-decoration: none; color: black;">SrNotes 1.0</a>
-                        <a href="http://scripts.srob.fr/SrNotes/Aide" target="_blank">Aide</a>
-                    </div>
-
-                    {% if app.session.hasFlash('notification') %}
-                        <div class="notif">{{ app.session.flash('notification') }}</div>
-                    {% endif %}
-
-                </div>
-
-                <div class="page">
-                    {% block page %}
-                    {% endblock %}
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
+    <div class="page">{% block page %}{% endblock %}</div>
 {% endblock %}

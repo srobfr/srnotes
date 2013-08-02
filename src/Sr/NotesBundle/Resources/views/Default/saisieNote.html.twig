@@ -6,6 +6,8 @@
 <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
 
+<input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
+
 <div id="divSaisie">
     <div class="breadCrumb" id="breadCrumb">
         <a href="{{ note.parent ? path('sr_notes_note_index', { 'id': note.parent.id } ) : '' }}" id="aBreadCrumb">&lt;= Parent :</a>
@@ -55,7 +57,7 @@
         <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
     </div>
 
-    <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
+    
     <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
 
     <input type="checkbox" name="prochaine" id="prochaine" {{ note.prochaine ? 'checked="checked"' : '' }}><label for="prochaine">Prochaine</label>
