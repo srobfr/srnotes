@@ -92,6 +92,10 @@ table.liste th {
 
 .inputTitre {
     width: 100%;
+    border: 1px solid #dadada;
+    padding: 4px 7px 1px 7px;
+    font-size: 17px;
+    font-family: 'Oxygen', sans-serif;
 }
 
 .inputDescription {
@@ -102,6 +106,7 @@ table.liste th {
 
 .breadCrumb {
     display: inline-block;
+    margin-bottom: 10px;
 }
 
 .divChronoDroite {

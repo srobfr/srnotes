@@ -5,32 +5,45 @@
 <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
 <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
+<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 
-<input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
-
-<div id="divSaisie">
-    <div class="breadCrumb" id="breadCrumb">
-        {% if note.parent is not null %}
-        <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
-        {% else %}
-        Parent :
-        {% endif %}
-        
-        {{ render(controller("SrNotesBundle:Note:selectProjets", {'noteId' : note.id })) }}
+<div class="row">
+    <div class="col-lg-7">
+        <div class="breadCrumb" id="breadCrumb">
+            {% if note.parent is not null %}
+            <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
+            {% else %}
+            Parent :
+            {% endif %}
+            {{ render(controller("SrNotesBundle:Note:selectProjets", {'noteId' : note.id })) }}
+        </div>
+        <input type="hidden" id="parentId" value="{{ note.parent ? note.parent.id : '' }}">
     </div>
 
-    <input type="hidden" id="parentId" value="{{ note.parent ? note.parent.id : '' }}">
+    <div class="col-lg-4">
+        <div class="col-lg-4">
+            <input type="radio" name="type" id="typeTache" {{ note.type == 1 ? 'checked="checked"':'' }}>&nbsp;<label for="typeTache" class="type">Tâche</label>
+        </div>
+        <div class="col-lg-4 reference">
+            <input type="radio" name="type" id="typeReference" {{ note.type == 2 ? 'checked="checked"':'' }}>&nbsp;<label for="typeReference" class="type">Référence</label>
+        </div>
+        <div class="col-lg-4 projet">
+            <input type="radio" name="type" id="typeProjet" {{ note.type == 3 ? 'checked="checked"':'' }}>&nbsp;<label for="typeProjet" class="type">Projet</label>
+        </div>
+    </div>
+
+    <div class="col-lg-1">
+        <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
+        <label for="chkBxTermine">Terminé</label>
+    </div>
+</div>
+
+<div id="divSaisie">
+
+    <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
 
     <div class="divChronoDroite">
-        <input type="radio" name="type" id="typeTache" {{ note.type == 1 ? 'checked="checked"':'' }}>
-        <label for="typeTache" class="type">Tâche</label>
-
-        <input type="radio" name="type" id="typeReference" {{ note.type == 2 ? 'checked="checked"':'' }}>
-        <label for="typeReference" class="type">Référence</label>
-
-        <input type="radio" name="type" id="typeProjet" {{ note.type == 3 ? 'checked="checked"':'' }}>
-        <label for="typeProjet" class="type">Projet</label>
-
+     
         {# Dates ouverture => Fermeture #}
         <span>[{{ note.dateCreation.format('Y-m-d H:i:s') }}{% if note.pcAvancement >= 100 and note.dateFermeture %} => {{ note.dateFermeture.format('Y-m-d H:i:s') }}{% endif %}]</span>
 
