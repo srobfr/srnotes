@@ -304,3 +304,21 @@ function timeToCountDown(time) {
     r += ('0' + s).substr(-2);
     return r;
 }
+
+// Initialiation de DataTable
+$(function() {
+
+    $('.noteslist').each(function() {
+        var $this = $(this);
+        var $datatable = $('.datatable', $this);
+        var htmlTop = $('.notesListTop', $this).html();
+        $('.notesListTop', $this).remove();
+        $datatable.dataTable({
+            bLengthChange: false,
+            bPaginate: false,
+            bInfo: false,
+            sDom: '<"notesListTop"flip>rt'
+        });
+        $('.notesListTop', $this).prepend(htmlTop);
+    });
+});

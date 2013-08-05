@@ -5,29 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{{ asset('bundles/srnotes/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-    
-    <!--<link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>-->
-    <style>
-        .navbar {
-            min-height: 30px;
-        }
-
-        .navbar-brand,
-        .navbar-nav > li > a {
-            line-height: 0;
-        }
-
-        .navbar-form, .navbar-text { margin-top: 4px; margin-bottom: 3px; display: inline-block }
-        .form-control { padding: 0 5px; height: auto; }
-        .navbar .btn { padding: 0 5px; }
-        .navbar { border-radius: 0 }
-
-    </style>
+    <link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="http://code.jquery.com/jquery.js"></script>
+    <script class="jsbin" src="http://datatables.net/download/build/jquery.dataTables.nightly.js"></script>
     <script src="{{ asset('bundles/srnotes/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/srnotes/js/main.js') }}"></script>
 {% endblock %}
@@ -37,6 +21,11 @@
     {# Barre de navigation #}
     <div class="navbar navbar-inverse">
         <a class="navbar-brand" href="#">ziNotes</a>
+
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Inbox</a></li>
+            <li><a href="#">Liste de courses</a></li>
+        </ul>
 
         <form class="navbar-form">
             <input type="text" class="form-control" style="width: 200px;" placeholder="Recherche textuelle">
@@ -65,11 +54,6 @@
                 <li><a href="#">Blah blah</a></li>
             </ul>
         </div>
-
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Inbox</a></li>
-            <li><a href="#">Liste de courses</a></li>
-        </ul>
 
         <form class="navbar-form">
             <input type="text" class="form-control" style="width: 100px;" placeholder="+Inbox">

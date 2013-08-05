@@ -25,7 +25,7 @@
 
         var updateTimer = function() {
             var timer = Math.floor(new Date().getTime() / 1000) - baseTime + baseTimer;
-            $('.timer{{ note.id }}').html(timeToCountDown(timer));
+            //$('.timer{{ note.id }}').html(timeToCountDown(timer));
         };
         updateTimer();
 

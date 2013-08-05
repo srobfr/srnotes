@@ -1,4 +1,4 @@
-{# Utile pour affichier un preview Markdown #}
+{# Utile pour afficher un preview Markdown #}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{{ asset('bundles/srnotes/js/showdown.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/srnotes/js/jquery.autosize.js') }}"></script>
@@ -28,16 +28,6 @@
 
         {# Dates ouverture => Fermeture #}
         <span>[{{ note.dateCreation.format('Y-m-d H:i:s') }}{% if note.pcAvancement >= 100 and note.dateFermeture %} => {{ note.dateFermeture.format('Y-m-d H:i:s') }}{% endif %}]</span>
-
-        {# Chrono #}
-        <a href="#" class="startChrono">
-            Chrono :
-            <span class="timer{{ note.id }}">
-            <script type="text/javascript">
-                document.write(timeToCountDown({{ note.dureeReelle | default('0')}}));
-            </script>
-            </span>
-        </a>
 
         <script type="text/javascript">
             $(function(){
