@@ -146,13 +146,15 @@ table.liste th {
 .file-uploader img { vertical-align: middle; }
 .file-uploader .caption { display: inline-block; }
 
-.navbar {min-height: 30px;}
+.navbar { min-height: 30px; margin-bottom: 0; }
 .navbar-brand,
 .navbar-nav > li > a {line-height: 0;}
 .navbar-form, .navbar-text { margin-top: 4px; margin-bottom: 3px; display: inline-block }
 .form-control { padding: 0 5px; height: auto; }
 .navbar .btn { padding: 0 5px; }
 .navbar { border-radius: 0 }
+.tagsList { padding: 0; border: 0; background-color: transparent; box-shadow: none }
+.tagsList li { box-shadow: 0 6px 12px rgba(0,0,0,0.175) }
 
 .noteslist { border: 1px solid rgb(47, 47, 53); margin: 5px 0; }
 .notesListTop {

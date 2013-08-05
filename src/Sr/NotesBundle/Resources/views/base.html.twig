@@ -23,50 +23,37 @@
     <div class="navbar navbar-inverse">
         <a class="navbar-brand" href="{{ path('sr_notes_default_index') }}">ziNotes</a>
 
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Inbox</a></li>
-            <li><a href="#">Liste de courses</a></li>
-        </ul>
+        {{ render(controller('SrNotesBundle:Default:raccourcis')) }}
 
-        <form class="navbar-form">
-            <input type="text" class="form-control" style="width: 200px;" placeholder="Recherche textuelle">
-        </form>
-        
-        <form class="navbar-form">
-            <input type="text" class="form-control" style="width: 150px;" placeholder="Recherche avancée">
-        </form>
-
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Perso <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Prochaines tâches</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Projets ouverts</a></li>
-            </ul>
-        </div>
-
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Pro <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Blah blah</a></li>
-            </ul>
-        </div>
-
-        <form class="navbar-form">
-            <input type="text" class="form-control" style="width: 100px;" placeholder="+Inbox">
-        </form>
-
-        <form class="navbar-form">
-            <input type="text" class="form-control" style="width: 100px;" placeholder="+Courses">
-        </form>
-
-        <p class="navbar-text pull-right">
-            <a href="#" class="navbar-link">Aide</a>
+        <p class="navbar-text">
+            <a href="{{ path('sr_notes_note_index', { 'id': 2 } ) }}" style="color: gray; font-size: x-small">éditer</a>
         </p>
+
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Tags <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu tagsList">
+                    {{ render(controller('SrNotesBundle:Default:listtags')) }}
+                </ul>
+            </div>
+
+            <form method="get" action="{{ path('sr_notes_search_index') }}" class="navbar-form">
+                <input type="text" class="form-control" style="width: 200px;" placeholder="Recherche textuelle" name="s" value="{{ s | default('') }}">
+            </form>
+
+            <form method="get" action="{{ path('sr_notes_search_index') }}" class="navbar-form">
+                <input type="text" class="form-control" style="width: 150px;" placeholder="Recherche avancée" name="r" value="{{ r | default('') }}">
+            </form>
+                
+            <p class="navbar-text">
+                <a href="#" class="navbar-link">Aide</a>
+            </p>
+        </div>
+
+        
+        
     </div>
 
     <div class="page">{% block page %}{% endblock %}</div>

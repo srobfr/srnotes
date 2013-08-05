@@ -489,11 +489,13 @@ class Note
         if(!is_null($this->getDateLimite())
             && $this->getDateLimite() <= \DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime("now +1 days")))
             && $this->getPcAvancement() < 100) $r[] = 'bientot'; // Date limite proche
-        elseif($this->getType() == 2) $r[] = 'reference'; // Référence
+
+        if($this->getType() == 2) $r[] = 'reference'; // Référence
         elseif($this->getType() == 3) $r[] = 'projet'; // Projet
-        elseif($this->getPcAvancement() == 100) $r[] = 'complete';
-        elseif($this->getProchaine()) $r[] = 'prochaine'; // Prochaine
-        elseif($this->getEnAttente()) $r[] = 'attente'; // En attente
+
+        if($this->getPcAvancement() == 100) $r[] = 'complete';
+        if($this->getProchaine()) $r[] = 'prochaine'; // Prochaine
+        if($this->getEnAttente()) $r[] = 'attente'; // En attente
 
         return implode(' ', $r);
     }

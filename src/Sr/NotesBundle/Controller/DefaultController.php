@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use \Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -59,7 +60,7 @@ class DefaultController extends Controller
             ", $rsm);
         $r['projetsSansProchaineTache'] = $q->getResult();
 
-        // Ou trouve les prjets sans tâche ouverte
+        // Ou trouve les projets sans tâche ouverte
         $rsm = new ResultSetMappingBuilder($em);
         $rsm->addRootEntityFromClassMetadata('Sr\NotesBundle\Entity\Note', 'n');
         $q = $em->createNativeQuery("SELECT n.*
@@ -100,7 +101,8 @@ class DefaultController extends Controller
             WHERE EXISTS (SELECT 1 FROM Note n
                 INNER JOIN note_tag nt ON n.id = nt.note_id
                 WHERE t.id = nt.tag_id
-                AND n.pcAvancement < 100)", $rsm);
+                AND n.pcAvancement < 100)
+                ORDER BY t.titre ASC", $rsm);
 
         $r = array('tags' => $q->getResult());
         return $r;
@@ -118,11 +120,11 @@ class DefaultController extends Controller
      * Retourne le code HTML des raccourcis, dans la zone de gauche
      */
     public function raccourcisAction() {
-        $note = $this->getDoctrine()->getRepository("SrNotesBundle:Note")->findOneByTitre("_raccourcis");
+        $note = $this->getDoctrine()->getRepository("SrNotesBundle:Note")->findOneById(2);
         $r = '';
         if(!is_null($note)) $r = $note->getNote();
         $r = str_replace('//', '/', str_replace('%ROOT%', $this->generateUrl('sr_notes_default_index'), $r));
-        return new \Symfony\Component\HttpFoundation\Response($r);
+        return new Response($r);
     }
 
     /**
