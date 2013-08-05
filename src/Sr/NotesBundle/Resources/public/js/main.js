@@ -311,6 +311,7 @@ $(function() {
     $('.noteslist').each(function() {
         var $this = $(this);
         var $datatable = $('.datatable', $this);
+        if($datatable.length === 0) return;
         var htmlTop = $('.notesListTop', $this).html();
         $('.notesListTop', $this).remove();
         $datatable.dataTable({
