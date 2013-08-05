@@ -10,7 +10,12 @@
 
 <div id="divSaisie">
     <div class="breadCrumb" id="breadCrumb">
-        <a href="{{ note.parent ? path('sr_notes_note_index', { 'id': note.parent.id } ) : '' }}" id="aBreadCrumb">&lt;= Parent :</a>
+        {% if note.parent is not null %}
+        <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
+        {% else %}
+        Parent :
+        {% endif %}
+        
         {{ render(controller("SrNotesBundle:Note:selectProjets", {'noteId' : note.id })) }}
     </div>
 

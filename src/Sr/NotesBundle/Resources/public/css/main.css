@@ -4,6 +4,10 @@ body {
     margin: 0;
 }
 
+a {
+    color: #0048A3;
+}
+
 table {
     border-collapse: collapse;
 }
@@ -117,6 +121,8 @@ table.liste th {
     color: black;
     text-decoration: none;
     font-size: 10px;
+    padding: 0 4px;
+    border-radius: 5px;
 }
 
 .chrono {
@@ -156,7 +162,15 @@ table.liste th {
     font-size: 11px;
     font-style: italic;
 }
+.notesListTop a { color: #99ccff; }
 .notesListTop .dataTables_filter { display: inline-block }
 .notesListTop .dataTables_filter label { margin-bottom: 0; }
 .notesListTop .dataTables_filter label input { border: 0; }
 .datatable { margin-bottom: 0 }
+
+.prochaine { background-color: #ffffcc; }
+.attente { background-color: #cccccc; }
+.bientot { background-color: #ffcccc; }
+.complete { text-decoration: line-through; }
+.projet { background-color: #e3eaff; }
+.reference { background-color: #e3ffe3; }

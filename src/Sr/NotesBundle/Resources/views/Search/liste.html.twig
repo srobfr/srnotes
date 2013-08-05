@@ -16,24 +16,22 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th title="Prochaine">N</th>
-                    <th title="En attente">W</th>
+                    <th title="Prochaine"><i class="icon-star"></th>
+                    <th title="En attente"><i class="icon-time"></th>
                     <th>Parent</th>
                     <th>Titre</th>
                     <th>Description</th>
-                    <th>Tags</th>
+                    <th><i class="icon-tags"></th>
                     <th>Deadline</th>
-                    <!--<th>Durée</th>-->
                     <th>Ouverte</th>
-                    <th>C</th>
+                    <th><i class="icon-check"></th>
                 </tr>
             </thead>
-
             <tbody>
                 {%  set dureeReelleTotale = 0 %}
                 {% for note in notes %}
                     {%  set dureeReelleTotale = dureeReelleTotale + note.dureeReelle %}
-                <tr class="tr{{note.id}}"{{ note.listLineStyle|raw }}>
+                <tr class="tr{{note.id}} {{ note.listLineClass }}">
                     <td><a href="{{ path('sr_notes_note_index', { 'id': note.id } ) }}">{{ note.id }}</a></td>
 
                     <td><input type="checkbox" id="nxt{{ note.id }}" {{ note.prochaine ? 'checked="checked"' : '' }}
@@ -44,15 +42,19 @@
 
                     <td>
                         {% if note.parent %}
-                        <a style="text-decoration: none; font-size: 9px; font-weight: normal;" href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}">{{ note.parent.titre | truncate(8) }}</a>
+                        <a style="font-size: 9px; font-weight: normal;" href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}">{{ note.parent.titre | truncate(8) }}</a>
                         {% endif %}
                     </td>
 
-                    <td><a style="text-decoration: none" href="{{ path('sr_notes_note_index', { 'id': note.id } ) }}">{{ note.titre | truncate(80) }}</a></td>
+                    <td><a href="{{ path('sr_notes_note_index', { 'id': note.id } ) }}">{{ note.titre | truncate(80) }}</a></td>
 
                     <td style="font-size: 10px;">{{ note.note | truncate(250) }}</td>
 
-                    <td style="font-size: 10px;">{{ note.getTagsAsStrings(true)|join(', ')|raw }}</td>
+                    <td style="font-size: 10px;">
+                        {% for tag in note.tags %}
+                            <span class="tag" style='background-color: #{{ tag.couleur }}'>{{ tag.titre }}</span>
+                        {% endfor %}
+                    </td>
                     <td>{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}</td>
                     <td>{{ note.dateCreation ? note.dateCreation.format('Y-m-d') : '' }}</td>
                     <td>

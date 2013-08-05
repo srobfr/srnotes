@@ -483,22 +483,19 @@ class Note
         return (in_array($note, $this->getParentsRecursifs()));
     }
 
-    /**
-     * Retourne le style de la ligne en fonction de l'état de la note
-     */
-    public function getListLineStyle() {
-        $r = '';
+    public function getListLineClass() {
+        $r = array();
+        
         if(!is_null($this->getDateLimite())
             && $this->getDateLimite() <= \DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime("now +1 days")))
-            && $this->getPcAvancement() < 100) $r = ' style="background-color: #FFBBBB"'; // Date limite proche
+            && $this->getPcAvancement() < 100) $r[] = 'bientot'; // Date limite proche
+        elseif($this->getType() == 2) $r[] = 'reference'; // Référence
+        elseif($this->getType() == 3) $r[] = 'projet'; // Projet
+        elseif($this->getPcAvancement() == 100) $r[] = 'complete';
+        elseif($this->getProchaine()) $r[] = 'prochaine'; // Prochaine
+        elseif($this->getEnAttente()) $r[] = 'attente'; // En attente
 
-        elseif($this->getType() == 2) $r = ' style="background-color: #9AE0E2"'; // Référence
-        elseif($this->getType() == 3) $r = ' style="background-color: #E3E3FF"'; // Projet
-        elseif($this->getPcAvancement() == 100) $r = ' style="background-color: #AAA; text-decoration: line-through" ';
-        elseif($this->getProchaine()) $r = ' style="background-color: #FFFFB0; color: #550; font-weight: bold"'; // Prochaine
-        elseif($this->getEnAttente()) $r = ' style="background-color: #CCC"'; // En attente
-
-        return $r;
+        return implode(' ', $r);
     }
 
     /**

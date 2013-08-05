@@ -8,7 +8,7 @@ function checkNote(urlWs, checked, noteId) {
         type: "POST",
         data: data,
         success: function(data) {
-            $('.tr' + noteId).css('text-decoration', (checked ? 'line-through' : ''));
+            $('.tr' + noteId).toggleClass('complete', checked);
         }
     });
 }
@@ -23,7 +23,7 @@ function checkNxt(urlWs, checked, noteId) {
         type:"POST",
         data:data,
         success:function (data) {
-            $('.tr' + noteId).css('background-color', (checked ? '#FFFFB0' : ''));
+            $('.tr' + noteId).toggleClass('prochaine', checked);
         }
     });
 }
@@ -38,7 +38,7 @@ function checkWtg(urlWs, checked, noteId) {
         type:"POST",
         data:data,
         success:function (data) {
-            $('.tr' + noteId).css('background-color', (checked ? '#EAEAEA' : ''));
+            $('.tr' + noteId).toggleClass('attente', checked);
         }
     });
 }
@@ -308,6 +308,24 @@ function timeToCountDown(time) {
 // Initialiation de DataTable
 $(function() {
 
+    $.fn.dataTableExt.afnSortData['dom-text'] = function(oSettings, iColumn) {
+        return $.map(oSettings.oApi._fnGetTrNodes(oSettings), function(tr, i) {
+            return $('td:eq(' + iColumn + ')', tr).text();
+        });
+    };
+
+    $.fn.dataTableExt.afnSortData['dom-select'] = function(oSettings, iColumn) {
+        return $.map(oSettings.oApi._fnGetTrNodes(oSettings), function(tr, i) {
+            return $('td:eq(' + iColumn + ') select', tr).val();
+        });
+    };
+
+    $.fn.dataTableExt.afnSortData['dom-checkbox'] = function(oSettings, iColumn) {
+        return $.map(oSettings.oApi._fnGetTrNodes(oSettings), function(tr, i) {
+            return $('td:eq(' + iColumn + ') input', tr).prop('checked') ? '1' : '0';
+        });
+    };
+
     $('.noteslist').each(function() {
         var $this = $(this);
         var $datatable = $('.datatable', $this);
@@ -318,7 +336,23 @@ $(function() {
             bLengthChange: false,
             bPaginate: false,
             bInfo: false,
-            sDom: '<"notesListTop"flip>rt'
+            sDom: '<"notesListTop"flip>rt',
+            oLanguage: {
+                sSearch: 'Filtrer :'
+            },
+            aoColumns: 
+            [
+                { sSortDataType: "dom-text", "sType": "numeric"}, // Id
+                { sSortDataType: "dom-checkbox" }, // Prochaine
+                { sSortDataType: "dom-checkbox" }, // En attente
+                null, // Parent
+                null, // Titre
+                null, // Description
+                null, // Tags
+                null, // Deadline
+                null, // Ouverte
+                { sSortDataType: "dom-checkbox" } // Fermée
+            ]
         });
         $('.notesListTop', $this).prepend(htmlTop);
     });
