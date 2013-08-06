@@ -5,9 +5,10 @@
         <title>{% block title %}SrNotes{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+
+        {% block javascripts %}{% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
     </body>
 </html>

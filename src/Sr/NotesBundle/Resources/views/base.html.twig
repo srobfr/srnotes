@@ -6,15 +6,17 @@
     <!-- Bootstrap -->
     <link href="{{ asset('bundles/srnotes/css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{{ asset('bundles/srnotes/css/jquery.tagsinput.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ asset('bundles/srnotes/css/main.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block javascripts %}
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
     {{ parent() }}
-    <script src="http://code.jquery.com/jquery.js"></script>
     <script src="{{ asset('bundles/srnotes/js/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('bundles/srnotes/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/srnotes/js/main.js') }}"></script>
+    <script src="{{ asset('bundles/srnotes/js/jquery.tagsinput.min.js') }}"></script>
 {% endblock %}
 
 {% block body %}

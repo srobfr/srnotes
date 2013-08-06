@@ -96,12 +96,14 @@ table.liste th {
     padding: 4px 7px 1px 7px;
     font-size: 17px;
     font-family: 'Oxygen', sans-serif;
+    margin-bottom: 8px;
 }
 
 .inputDescription {
     width: 100%;
     height: 100px;
     max-height: 800px;
+    border: 1px solid #dadada;
 }
 
 .breadCrumb {
@@ -176,8 +178,18 @@ table.liste th {
 .datatable { margin-bottom: 0 }
 
 .prochaine { background-color: #ffffcc; }
-.attente { background-color: #cccccc; }
+.attente { background-color: #DDDDDD; }
 .bientot { background-color: #ffcccc; }
 .complete { text-decoration: line-through; }
 .projet { background-color: #e3eaff; }
 .reference { background-color: #e3ffe3; }
+.noteType > li > a { padding: 3px 15px; }
+.noteFlags label { padding: 0 6px; border-radius: 4px; width: 100%; }
+.editorsChoice { border-bottom: none; }
+.editorsChoice > li { text-align: center; }
+.editorsChoice > li > a { padding: 7px 15px; }
+.btnEnregistrer { padding: 2px 5px; }
+
+div.tagsinput { padding: 0 0; }
+div.tagsinput input { padding: 1px 3px; }
+div.tagsinput span.tag { padding: 1px 3px; }

@@ -1,14 +1,25 @@
-{# Utile pour afficher un preview Markdown #}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{ asset('bundles/srnotes/js/showdown.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/srnotes/js/jquery.autosize.js') }}"></script>
-<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
-<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+{% extends "SrNotesBundle::base.html.twig" %}
 
-<div class="row">
-    <div class="col-lg-7">
+{# Utile pour afficher un preview Markdown #}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/srnotes/js/showdown.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/srnotes/js/Note.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/srnotes/js/jquery.autosize.js') }}"></script>
+    <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block page %}
+<div class="saisieNoteContainer row">
+    <div class="col-6">
         <div class="breadCrumb" id="breadCrumb">
             {% if note.parent is not null %}
             <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
@@ -20,70 +31,82 @@
         <input type="hidden" id="parentId" value="{{ note.parent ? note.parent.id : '' }}">
     </div>
 
-    <div class="col-lg-4">
-        <div class="col-lg-4">
-            <input type="radio" name="type" id="typeTache" {{ note.type == 1 ? 'checked="checked"':'' }}>&nbsp;<label for="typeTache" class="type">Tâche</label>
-        </div>
-        <div class="col-lg-4 reference">
-            <input type="radio" name="type" id="typeReference" {{ note.type == 2 ? 'checked="checked"':'' }}>&nbsp;<label for="typeReference" class="type">Référence</label>
-        </div>
-        <div class="col-lg-4 projet">
-            <input type="radio" name="type" id="typeProjet" {{ note.type == 3 ? 'checked="checked"':'' }}>&nbsp;<label for="typeProjet" class="type">Projet</label>
-        </div>
+    <div class="col-3">
+        {# Dates ouverture => Fermeture #}
+        <span>
+            <i class="icon-edit"></i>
+            {{ note.dateCreation.format('Y-m-d H:i:s') }}
+            {% if note.pcAvancement >= 100 and note.dateFermeture %}
+                &nbsp;
+                <i class="icon-check"></i>
+                {{ note.dateFermeture.format('Y-m-d H:i:s') }}
+            {% endif %}
+        </span>
     </div>
 
-    <div class="col-lg-1">
+    <div class="col-2">
+        <ul class="nav nav-pills noteType">
+            <li{{ note.type == 1 ? ' class="active"':'' }}><a href="#">Tâche</a></li>
+            <li{{ note.type == 2 ? ' class="active"':'' }}><a href="#">Référence</a></li>
+            <li{{ note.type == 3 ? ' class="active"':'' }}><a href="#">Projet</a></li>
+        </ul>
+    </div>
+
+    <div class="col-1">
+        <span style="display:none" id="labelPcAvancement">{{ note.pcAvancement | default("0") }} %</span>
+        <input type="hidden" name="pcAvancement" id="pcAvancement" value="{{ note.pcAvancement | default("0") }}">
         <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
         <label for="chkBxTermine">Terminé</label>
     </div>
 </div>
 
 <div id="divSaisie">
-
     <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
 
-    <div class="divChronoDroite">
-     
-        {# Dates ouverture => Fermeture #}
-        <span>[{{ note.dateCreation.format('Y-m-d H:i:s') }}{% if note.pcAvancement >= 100 and note.dateFermeture %} => {{ note.dateFermeture.format('Y-m-d H:i:s') }}{% endif %}]</span>
+    <div class="row">
+        <div class="col-1 noteFlags">
+            <label class="prochaine">
+                <input type="checkbox"> Prochaine
+            </label>
+        </div>
+        <div class="col-1 noteFlags">
+            <label class="attente">
+                <input type="checkbox"> En attente
+            </label>
+        </div>
 
-        <script type="text/javascript">
-            $(function(){
-                $('.startChrono').on('click', function(event){
-                    event.preventDefault();
+        <div class="col-2">
+            <input type="date" class="form-control" placeholder="Date limite" name="dateLimite" value="{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}">
+        </div>
 
-                    // On appelle l'ajax qui démarre le chrono
-                    startChrono({{ note.id }});
-                });
-            });
-        </script>
+        <div class="col-4">
+            <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+        </div>
 
-        <span>Terminée :</span>
+        <div class="col-1">
+            <input type="button" class="btn btn-mini btn-primary btnEnregistrer" value="Enregistrer" title="Raccourci : Ctrl+S">
+        </div>
 
-        <span style="display:none" id="labelPcAvancement">{{ note.pcAvancement | default("0") }} %</span>
-        <input type="hidden" name="pcAvancement" id="pcAvancement" value="{{ note.pcAvancement | default("0") }}">
-        <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
+        <div class="col-3">
+            <ul class="nav nav-tabs text-right editorsChoice">
+                <li class="active col-4"><a href="#">Simple</a></li>
+                <li class="col-4"><a href="#">Ace</a></li>
+                <li class="col-4"><a href="#">Mkdown</a></li>
+            </ul>
+        </div>
     </div>
 
     
+    {# Onglets des modes d'édition #}
     <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
 
-    <input type="checkbox" name="prochaine" id="prochaine" {{ note.prochaine ? 'checked="checked"' : '' }}><label for="prochaine">Prochaine</label>
-
-    <input type="checkbox" name="enAttente" id="enAttente" {{ note.enAttente ? 'checked="checked"' : '' }}><label for="enAttente">En attente</label>
-
-    <input type="date" name="dateLimite" id="dateLimite" value="{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}"><label for="dateLimite">Date limite</label>
-
-
-
-    <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+    
+    
     <span onclick="javascript:$('#tagsPourAjout').toggle(200);" style="cursor: pointer">+</span>
 
     <span id="tagsPourAjout" style="display:none">
         {% render controller("SrNotesBundle:Default:listTagsPourAjout") %}
     </span>
-
-    <input type="button" id="btnEnregistrer" value="Enregistrer" onclick="enregistrer()" title="Raccourci : Ctrl+S">
 
     <form style="display: inline" method="post" action="{{ path('sr_notes_note_save') }}" id="formSousNote">
         <input id="champSaisieSousNote" placeholder="Créer une sous note" type="text" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
@@ -110,29 +133,25 @@
     <div class="file-uploader"></div>
 
     {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
-    <script type="text/javascript">
-        // Enable the file uploader
-        $(function() {
-            new PunkAveFileUploader({
-                'uploadUrl': {{ path('upload', { "id": note.id }) | json_encode | raw }},
-                'viewUrl': {{ (app.request.basePath ~ '/uploads/' ~ note.id) | json_encode | raw }},
-                'el': '.file-uploader',
-                'existingFiles': {{ files | json_encode | raw }},
-                'errorCallback': function( info ) { alert("Error : " + info.error); }
-            });
-        });
-    </script>
-
 </div>
 
 {# La liste des enfants de cette note #}
 {% if enfants|length > 0 %}
-<br>
+    <br>
     {{ render(controller("SrNotesBundle:Search:liste", { "s": null, "q": null, "r": "!C&^"~note.id })) }}
 {% endif %}
 
 <script type="text/javascript">
-    $(function(){
+    $(function() {
+        var $saisieNoteContainer = $('.saisieNoteContainer');
+        var note = new Note($saisieNoteContainer, {
+            id: {{ note.id }},
+            uploadUrl: {{ path('upload', { "id": note.id }) | json_encode | raw }},
+            uploadViewUrl: {{ (app.request.basePath ~ '/uploads/' ~ note.id) | json_encode | raw }},
+            existingFiles: {{ files | json_encode | raw }}
+        });
+        
+        $('.saisieNoteContainer').data('note', note);
 
         $('.openMarkdownPreview').on('click', function() {
             // Ouvre le popup
@@ -152,37 +171,7 @@
             descriptionChangeHandler();
         });
     });
-
-    function enregistrer() {
-        var data = {
-            id: {{ note.id }},
-            titre:$('#titre').val(),
-            note:$('#description').val(),
-            parentId: $('#parentId').val(),
-            prochaine:$('#prochaine').attr('checked') == 'checked',
-            enAttente:$('#enAttente').attr('checked') == 'checked',
-            dateLimite:$('#dateLimite').val(),
-            pcAvancement:$('#pcAvancement').val(),
-            tags:$('#tags').val(),
-            type: ($('#typeTache').attr('checked') == 'checked' ? 1
-                    : ($('#typeReference').attr('checked') == 'checked' ? 2
-                        : ($('#typeProjet').attr('checked') == 'checked' ? 3 : 0)))
-        };
-
-        $('#btnEnregistrer').val("En cours d'enregistrement...");
-
-        $.ajax("{{ path('sr_notes_note_save') }}", {
-            type: "POST",
-            data: data,
-            success: function(data) {
-                $('#btnEnregistrer').val("Enregistré.");
-                window.setTimeout(function(){
-                    $('#btnEnregistrer').val("Enregistrer");
-                }, 3000);
-            }
-        });
-    }
-
+    
     function tacheCompletee() {
         $('#titre').css('text-decoration', 'line-through');
     }
@@ -206,21 +195,16 @@
         });
 
         $('#chkBxTermine').change(function(){
-            $('#pcAvancement').val($('#chkBxTermine').attr('checked')==='checked' ? 100 : 0);
+            $('#pcAvancement').val($('#chkBxTermine').is(':checked') ? 100 : 0);
             $('#pcAvancement').change();
         });
 
-        // Capture de Ctrl+S
-        $(document).keydown(function(e) {
-            if(e.ctrlKey && e.keyCode == 83/*S*/) {
-                enregistrer();
-                return false;
-            }
-            return true;
-        });
+        
 
         $('#description').autosize();
     });
 
 
 </script>
+
+{% endblock %}
