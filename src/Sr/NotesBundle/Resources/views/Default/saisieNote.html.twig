@@ -19,7 +19,7 @@
 
 {% block page %}
 <div class="saisieNoteContainer row">
-    <div class="col-6">
+    <div class="col-lg-6">
         <div class="breadCrumb" id="breadCrumb">
             {% if note.parent is not null %}
             <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
@@ -31,7 +31,7 @@
         <input type="hidden" id="parentId" value="{{ note.parent ? note.parent.id : '' }}">
     </div>
 
-    <div class="col-3">
+    <div class="col-lg-3">
         {# Dates ouverture => Fermeture #}
         <span>
             <i class="icon-edit"></i>
@@ -44,7 +44,7 @@
         </span>
     </div>
 
-    <div class="col-2">
+    <div class="col-lg-2">
         <ul class="nav nav-pills noteType">
             <li{{ note.type == 1 ? ' class="active"':'' }}><a href="#">Tâche</a></li>
             <li{{ note.type == 2 ? ' class="active"':'' }}><a href="#">Référence</a></li>
@@ -52,7 +52,7 @@
         </ul>
     </div>
 
-    <div class="col-1">
+    <div class="col-lg-1">
         <span style="display:none" id="labelPcAvancement">{{ note.pcAvancement | default("0") }} %</span>
         <input type="hidden" name="pcAvancement" id="pcAvancement" value="{{ note.pcAvancement | default("0") }}">
         <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
@@ -64,75 +64,78 @@
     <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
 
     <div class="row">
-        <div class="col-1 noteFlags">
+        <div class="col-lg-1 noteFlags">
             <label class="prochaine">
                 <input type="checkbox"> Prochaine
             </label>
         </div>
-        <div class="col-1 noteFlags">
+        <div class="col-lg-1 noteFlags">
             <label class="attente">
                 <input type="checkbox"> En attente
             </label>
         </div>
 
-        <div class="col-2">
-            <input type="date" class="form-control" placeholder="Date limite" name="dateLimite" value="{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}">
+        <div class="col-lg-2">
+            <input type="date" class="form-control noteFormControl" placeholder="Date limite" name="dateLimite" value="{{ note.dateLimite ? note.dateLimite.format('Y-m-d') : '' }}">
         </div>
 
-        <div class="col-4">
-            <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+        <div class="col-lg-4">
+            <div class="noteFormControl">
+                <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+            </div>
         </div>
 
-        <div class="col-1">
-            <input type="button" class="btn btn-mini btn-primary btnEnregistrer" value="Enregistrer" title="Raccourci : Ctrl+S">
+        <div class="col-lg-1">
+            <input type="button" class="btn btn-mini btn-primary btnEnregistrer noteFormControl" value="Enregistrer" title="Raccourci : Ctrl+S">
         </div>
 
-        <div class="col-3">
+        {# Onglets des modes d'édition #}
+        <div class="col-lg-3">
             <ul class="nav nav-tabs text-right editorsChoice">
-                <li class="active col-4"><a href="#">Simple</a></li>
-                <li class="col-4"><a href="#">Ace</a></li>
-                <li class="col-4"><a href="#">Mkdown</a></li>
+                <li class="active col-lg-4"><a href="#">Simple</a></li>
+                <li class="col-lg-4"><a href="#">Ace</a></li>
+                <li class="col-lg-4"><a href="#">Mkdown</a></li>
             </ul>
         </div>
     </div>
 
-    
-    {# Onglets des modes d'édition #}
-    <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
+    {# Editeurs #}
+    <div style="margin-bottom: 5px;">
+        <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
+    </div>
 
-    
-    
-    <span onclick="javascript:$('#tagsPourAjout').toggle(200);" style="cursor: pointer">+</span>
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="post" action="{{ path('sr_notes_note_save') }}" id="formSousNote">
+                <div class="input-group">
+                    <input type="text" class="form-control noteFormControl" placeholder="Créer une sous-note" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
+                    <input type="hidden" name="parentId" value="{{ note.id }}">
+                    <input type="hidden" name="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
+                    <input type="hidden" name="type" value="1">
+                    <input type="hidden" name="redirToNote" id="redirToNoteInput" value="1">
+                    <span class="input-group-btn">
+                        <button class="btn btn-mini btn-default noteFormControl" type="button">Ok</button>
+                    </span>
 
-    <span id="tagsPourAjout" style="display:none">
-        {% render controller("SrNotesBundle:Default:listTagsPourAjout") %}
-    </span>
-
-    <form style="display: inline" method="post" action="{{ path('sr_notes_note_save') }}" id="formSousNote">
-        <input id="champSaisieSousNote" placeholder="Créer une sous note" type="text" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
-        <input type="hidden" name="parentId" value="{{ note.id }}">
-        <input type="hidden" name="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
-        <input type="hidden" name="type" value="1">
-        <input type="hidden" name="redirToNote" id="redirToNoteInput" value="1">
-
-        <a href="#" class="openMarkdownPreview">Preview Markdown</a>
-
-        <script>
-            $(function(){
-                $('#champSaisieSousNote').keydown(function (e) {
-                    if (e.ctrlKey && e.keyCode == 13) {
-                        // Ctrl-Enter
-                        $('#redirToNoteInput').attr('name', 'redirTo').val('{{ path('sr_notes_note_index', {'id':note.id}) }}');
-                        $('#formSousNote').submit();
-                    }
-                });
-            });
-        </script>
-    </form>
+                    <script>
+                        $(function(){
+                            $('#champSaisieSousNote').keydown(function (e) {
+                                if (e.ctrlKey && e.keyCode == 13) {
+                                    // Ctrl-Enter
+                                    $('#redirToNoteInput').attr('name', 'redirTo').val('{{ path('sr_notes_note_index', {'id':note.id}) }}');
+                                    $('#formSousNote').submit();
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="file-uploader"></div>
-
     {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
+    
 </div>
 
 {# La liste des enfants de cette note #}

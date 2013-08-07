@@ -185,9 +185,12 @@ table.liste th {
 .reference { background-color: #e3ffe3; }
 .noteType > li > a { padding: 3px 15px; }
 .noteFlags label { padding: 0 6px; border-radius: 4px; width: 100%; }
+
+.noteFormControl { margin-bottom: 5px; height: 26px; }
+
 .editorsChoice { border-bottom: none; }
 .editorsChoice > li { text-align: center; }
-.editorsChoice > li > a { padding: 7px 15px; }
+.editorsChoice > li > a { padding: 7px 0; }
 .btnEnregistrer { padding: 2px 5px; }
 
 div.tagsinput { padding: 0 0; }
