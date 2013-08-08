@@ -19,7 +19,7 @@
 
 {% block page %}
 <div class="saisieNoteContainer row">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="breadCrumb" id="breadCrumb">
             {% if note.parent is not null %}
             <a href="{{ path('sr_notes_note_index', { 'id': note.parent.id } ) }}" id="aBreadCrumb" style="color: inherit"><i class="icon-long-arrow-left"></i> Parent :</a>
@@ -44,7 +44,7 @@
         </span>
     </div>
 
-    <div class="col-lg-2">
+    <div class="col-lg-3">
         <ul class="nav nav-pills noteType">
             <li{{ note.type == 1 ? ' class="active"':'' }} data-type="1"><a href="#">Tâche</a></li>
             <li{{ note.type == 2 ? ' class="active"':'' }} data-type="2"><a href="#">Référence</a></li>
@@ -52,7 +52,7 @@
         </ul>
     </div>
 
-    <div class="col-lg-1">
+    <div class="col-lg-2">
         <span style="display:none" id="labelPcAvancement">{{ note.pcAvancement | default("0") }} %</span>
         <input type="hidden" name="pcAvancement" id="pcAvancement" value="{{ note.pcAvancement | default("0") }}">
         <input type="checkbox" id="chkBxTermine"{{ note.pcAvancement == 100 ? 'checked="checked"' : '' }}>
