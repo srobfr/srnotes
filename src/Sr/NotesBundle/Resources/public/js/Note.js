@@ -63,34 +63,50 @@ var Note = function($container, options) {
      * @returns {undefined}
      */
     that.save = function() {
+        var btnLabel = $('.btnEnregistrer').val();
+        var bgColor = $('.btnEnregistrer').css('background-color');
+        $('.btnEnregistrer').addClass('disabled');
+        $('.btnEnregistrer').val($('.btnEnregistrer').attr('data-loading-text'));
+        
+        setTimeout(function() {
+            $('.btnEnregistrer')
+                    .val(btnLabel)
+                    .removeClass('disabled')
+                    .css({ 'background-color': 'greenyellow' })
+                    .animate({ 'background-color' : bgColor }, 2000);
+            
+        }, 1000);
+
         var data = {
             id: options.id,
-            titre:$('#titre').val(),
-            note:$('#description').val(),
-            parentId: $('#parentId').val(),
-            prochaine:$('#prochaine').attr('checked') == 'checked',
-            enAttente:$('#enAttente').attr('checked') == 'checked',
-            dateLimite:$('#dateLimite').val(),
-            pcAvancement:$('#pcAvancement').val(),
+            titre: $('#titre').val(),
+            note: $('#description').val(),
+            parentId: $('#parents').val(),
+            prochaine: $('.prochaine input').is(':checked'),
+            enAttente: $('.attente input').is(':checked'),
+            dateLimite: $('input[name="dateLimite"]').val(),
+            pcAvancement: ($('#chkBxTermine').is(':checked') ? 100 : 0),
             tags:$('#tags').val(),
-            type: ($('#typeTache').attr('checked') == 'checked' ? 1
-                : ($('#typeReference').attr('checked') == 'checked' ? 2
-                : ($('#typeProjet').attr('checked') == 'checked' ? 3 : 0)))
+            type: $('ul.noteType li.active').attr('data-type')
         };
 
-        console.log(data); return;
-
-        $('#btnEnregistrer').val("En cours d'enregistrement...");
-
-        $.ajax("{{ path('sr_notes_note_save') }}", {
+        $.ajax(options.saveNoteUrl, {
             type: "POST",
             data: data,
             success: function(data) {
-                $('#btnEnregistrer').val("Enregistré.");
-                window.setTimeout(function(){
-                    $('#btnEnregistrer').val("Enregistrer");
-                }, 3000);
-            }
+                $('.btnEnregistrer')
+                    .val(btnLabel)
+                    .removeClass('disabled')
+                    .css({ 'background-color': 'greenyellow' })
+                    .animate({ 'background-color' : bgColor }, 2000);
+            },
+            error: function(data) {
+                $('.btnEnregistrer')
+                    .val(btnLabel)
+                    .removeClass('disabled')
+                    .css({ 'background-color': 'red' })
+                    .animate({ 'background-color' : bgColor }, 2000);
+            },
         });
     };
 

@@ -46,9 +46,9 @@
 
     <div class="col-lg-2">
         <ul class="nav nav-pills noteType">
-            <li{{ note.type == 1 ? ' class="active"':'' }}><a href="#">Tâche</a></li>
-            <li{{ note.type == 2 ? ' class="active"':'' }}><a href="#">Référence</a></li>
-            <li{{ note.type == 3 ? ' class="active"':'' }}><a href="#">Projet</a></li>
+            <li{{ note.type == 1 ? ' class="active"':'' }} data-type="1"><a href="#">Tâche</a></li>
+            <li{{ note.type == 2 ? ' class="active"':'' }} data-type="2"><a href="#">Référence</a></li>
+            <li{{ note.type == 3 ? ' class="active"':'' }} data-type="3"><a href="#">Projet</a></li>
         </ul>
     </div>
 
@@ -61,17 +61,17 @@
 </div>
 
 <div id="divSaisie">
-    <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre">
+    <input placeholder="Titre" type="text" id="titre" value="{{ note.titre | default("") }}" class="inputTitre"{{ note.pcAvancement >= 100 ? ' style="text-decoration: line-through;"' : '' }}>
 
     <div class="row">
         <div class="col-lg-1 noteFlags">
             <label class="prochaine">
-                <input type="checkbox"> Prochaine
+                <input type="checkbox"{{ note.prochaine ? ' checked="checked"' }}> Prochaine
             </label>
         </div>
         <div class="col-lg-1 noteFlags">
             <label class="attente">
-                <input type="checkbox"> En attente
+                <input type="checkbox"{{ note.enAttente ? ' checked="checked"' }}> En attente
             </label>
         </div>
 
@@ -80,13 +80,13 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="noteFormControl">
+            <div class="form-control noteFormControl">
                 <input type="text" placeholder="Tags" id="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
             </div>
         </div>
 
         <div class="col-lg-1">
-            <input type="button" class="btn btn-mini btn-primary btnEnregistrer noteFormControl" value="Enregistrer" title="Raccourci : Ctrl+S">
+            <input type="button" class="btn btn-mini btn-primary btnEnregistrer noteFormControl" data-loading-text="Enregistrement..." value="Enregistrer" title="Raccourci : Ctrl+S">
         </div>
 
         {# Onglets des modes d'édition #}
@@ -108,7 +108,7 @@
         <div class="col-lg-12">
             <form method="post" action="{{ path('sr_notes_note_save') }}" id="formSousNote">
                 <div class="input-group">
-                    <input type="text" class="form-control noteFormControl" placeholder="Créer une sous-note" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
+                    <input type="text" class="form-control noteFormControl" id="champSaisieSousNote" placeholder="Créer une sous-note" name="titre" title="Appuyer sur entrée pour créer une sous-note de la note actuelle. Appuyez sur Ctrl+Entrée pour rester sur la même page après la création.">
                     <input type="hidden" name="parentId" value="{{ note.id }}">
                     <input type="hidden" name="tags" value="{{ note ? (note.tagsAsStrings|join(', ')) : '' }}">
                     <input type="hidden" name="type" value="1">
@@ -134,7 +134,7 @@
     </div>
 
     <div class="file-uploader"></div>
-    {% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
+    {% include "SrNotesBundle:Default:templates.html.twig" %}
     
 </div>
 
@@ -151,6 +151,7 @@
             id: {{ note.id }},
             uploadUrl: {{ path('upload', { "id": note.id }) | json_encode | raw }},
             uploadViewUrl: {{ (app.request.basePath ~ '/uploads/' ~ note.id) | json_encode | raw }},
+            saveNoteUrl: {{ path('sr_notes_note_save') | json_encode | raw }},
             existingFiles: {{ files | json_encode | raw }}
         });
         

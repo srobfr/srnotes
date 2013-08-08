@@ -1,5 +1,5 @@
 {
-    "name": "srob/srnotes",
+    "name": "srobfr/zinotes",
     "description": "Personal task management loosely inspired by GTD",
     "autoload": {
         "psr-0": { "": "src/" }

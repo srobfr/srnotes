@@ -147,8 +147,8 @@ table.liste th {
 }
 
 /* File uploads */
-.file-uploader { background-color: #dfdfdf; border: 1px solid #696969}
-.file-uploader ul { margin: 3px; padding: 0 }
+.file-uploader { background-color: #dfdfdf; border: 1px dotted #666666; padding: 3px; }
+.file-uploader ul { margin: 0; padding: 0 }
 .file-uploader li { display: inline-block; margin: 5px}
 .file-uploader img { vertical-align: middle; }
 .file-uploader .caption { display: inline-block; }
@@ -193,6 +193,6 @@ table.liste th {
 .editorsChoice > li > a { padding: 7px 0; }
 .btnEnregistrer { padding: 2px 5px; }
 
-div.tagsinput { padding: 0 0; }
+div.tagsinput { padding: 1px 0; border: 0; }
 div.tagsinput input { padding: 1px 3px; }
 div.tagsinput span.tag { padding: 1px 3px; }
