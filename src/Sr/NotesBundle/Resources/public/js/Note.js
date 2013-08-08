@@ -5,6 +5,9 @@
 var Note = function($container, options) {
     var that = this;
 
+    var btnSaveLabel = $('.btnEnregistrer').val();
+    var btnSaveBgColor = $('.btnEnregistrer').css('background-color');
+
     /**
      * Constructeur.
      */
@@ -63,20 +66,9 @@ var Note = function($container, options) {
      * @returns {undefined}
      */
     that.save = function() {
-        var btnLabel = $('.btnEnregistrer').val();
-        var bgColor = $('.btnEnregistrer').css('background-color');
         $('.btnEnregistrer').addClass('disabled');
         $('.btnEnregistrer').val($('.btnEnregistrer').attr('data-loading-text'));
         
-        setTimeout(function() {
-            $('.btnEnregistrer')
-                    .val(btnLabel)
-                    .removeClass('disabled')
-                    .css({ 'background-color': 'greenyellow' })
-                    .animate({ 'background-color' : bgColor }, 2000);
-            
-        }, 1000);
-
         var data = {
             id: options.id,
             titre: $('#titre').val(),
@@ -95,17 +87,17 @@ var Note = function($container, options) {
             data: data,
             success: function(data) {
                 $('.btnEnregistrer')
-                    .val(btnLabel)
+                    .val(btnSaveLabel)
                     .removeClass('disabled')
                     .css({ 'background-color': 'greenyellow' })
-                    .animate({ 'background-color' : bgColor }, 2000);
+                    .animate({ 'background-color' : btnSaveBgColor }, 2000);
             },
             error: function(data) {
                 $('.btnEnregistrer')
-                    .val(btnLabel)
+                    .val(btnSaveLabel)
                     .removeClass('disabled')
                     .css({ 'background-color': 'red' })
-                    .animate({ 'background-color' : bgColor }, 2000);
+                    .animate({ 'background-color' : btnSaveBgColor }, 2000);
             },
         });
     };
