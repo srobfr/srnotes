@@ -164,6 +164,7 @@ var Note = function($container, options) {
 
                 aceEditor = ace.edit("aceEditor");
                 aceEditor.setTheme("ace/theme/crimson_editor");
+                aceEditor.getSession().setMode("ace/mode/markdown");
 
                 var descriptionChangeHandler = function(event) {
                     if(event) event.preventDefault();
@@ -190,25 +191,6 @@ var Note = function($container, options) {
 
                 heightUpdateFunction();
                 aceEditor.getSession().on('change', heightUpdateFunction);
-
-                var modes = {
-                    'php': new RegExp('(<\?php|lang:PHP)'),
-                    'javascript': new RegExp('lang:JS'),
-                    'markdown': new RegExp('lang:MKDOWN')
-                };
-
-                var mode = null;
-                for(var k in modes) {
-                    if(descriptionContent.match(modes[k])) {
-                        mode = k;
-                    }
-                }
-
-                if(mode !== null) {
-                    console.log(mode);
-                    aceEditor.getSession().setMode("ace/mode/" + mode);
-                }
-
                 aceEditor.focus();
             }
         }
