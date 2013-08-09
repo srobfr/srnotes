@@ -10,6 +10,7 @@
     <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/srnotes/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -93,15 +94,15 @@
         {# Onglets des modes d'édition #}
         <div class="col-lg-3">
             <ul class="nav nav-tabs text-right editorsChoice">
-                <li class="active col-lg-4"><a href="#">Simple</a></li>
-                <li class="col-lg-4"><a href="#">Ace</a></li>
-                <li class="col-lg-4"><a href="#">Mkdown</a></li>
+                <li class="active col-lg-4 simpleEditor"><a href="#">Simple</a></li>
+                <li class="col-lg-4 aceEditor"><a href="#">Ace</a></li>
+                <li class="col-lg-4 markdownEditor"><a href="#">Markdown</a></li>
             </ul>
         </div>
     </div>
 
     {# Editeurs #}
-    <div style="margin-bottom: 5px;">
+    <div style="margin-bottom: 5px;" class="editorContainer">
         <textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)">{{ note.note | default("") }}</textarea>
     </div>
 
@@ -157,59 +158,8 @@
         });
         
         $('.saisieNoteContainer').data('note', note);
-
-        $('.openMarkdownPreview').on('click', function() {
-            // Ouvre le popup
-            var win = window.open('about:blank', '_blank', "location=no,menubar=no");
-            win.document.write('<!DOCTYPE HTML><html lang="fr-FR"><head><meta charset="UTF-8"><title>Preview Markdown</title><link href="{{ app.request.scheme ~  '://' ~  app.request.host ~ asset('bundles/srnotes/css/markdown.css') }}" type="text/css" rel="stylesheet"/></head><body>test</body></html>');
-
-            // Installe le handler pour mettre à jour le contenu du popup
-            var descriptionChangeHandler = function(event) {
-                if(event) event.preventDefault();
-                var converter = new Showdown.converter();
-                win.document.body.innerHTML = converter.makeHtml($('#description').val());
-            };
-
-            $('#description')
-                    .on('keyup', descriptionChangeHandler)
-                    .on('change', descriptionChangeHandler);
-            descriptionChangeHandler();
-        });
     });
     
-    function tacheCompletee() {
-        $('#titre').css('text-decoration', 'line-through');
-    }
-
-    function tacheRouverte() {
-        $('#titre').css('text-decoration', 'none');
-    }
-
-    $(function(){
-        $('#pcAvancement').change(function(){
-            if(this.value == 100 && $('#labelPcAvancement').html() != '100 %') {
-                // Complétée
-                tacheCompletee();
-
-            } else if(this.value != 100 && $('#labelPcAvancement').html() == '100 %') {
-                // Rouverte
-                tacheRouverte();
-            }
-
-            $('#labelPcAvancement').html(this.value + " %");
-        });
-
-        $('#chkBxTermine').change(function(){
-            $('#pcAvancement').val($('#chkBxTermine').is(':checked') ? 100 : 0);
-            $('#pcAvancement').change();
-        });
-
-        
-
-        $('#description').autosize();
-    });
-
-
 </script>
 
 {% endblock %}

@@ -7,6 +7,8 @@ var Note = function($container, options) {
 
     var btnSaveLabel = $('.btnEnregistrer').val();
     var btnSaveBgColor = $('.btnEnregistrer').css('background-color');
+    var currentEditorType = 'simple';
+    var aceEditor = null;
 
     /**
      * Constructeur.
@@ -58,7 +60,175 @@ var Note = function($container, options) {
             'errorCallback': function( info ) { alert("Error : " + info.error); }
         });
 
-        
+        $('li.simpleEditor a', 'ul.editorsChoice').click(function(e) { $('.saisieNoteContainer').data('note').toggleEditor('simple'); return false ;});
+        $('li.aceEditor a', 'ul.editorsChoice').click(function(e) { $('.saisieNoteContainer').data('note').toggleEditor('ace'); return false ;});
+        $('li.markdownEditor a', 'ul.editorsChoice').click(function(e) { $('.saisieNoteContainer').data('note').toggleEditor('markdown'); return false ;});
+
+        that.toggleEditor('simple');
+    };
+
+    /**
+     * Switche d'un éditeur à un autre
+     * @param string editor ('simple', 'ace', 'markdown')
+     * @returns void
+     */
+    that.toggleEditor = function(editor) {
+        var descriptionContent = that.getDescriptionContent();
+        var $editorContainer = $('.editorContainer');
+        $editorContainer.empty();
+        $editorContainer.css({ height: '' });
+
+        $('.editorsChoice li').removeClass('active');
+
+        var editorsInit = {
+
+            /**
+             * Simple textarea.
+             */
+            simple: function() {
+                $('.editorsChoice li.simpleEditor').addClass('active');
+                var $editor = $('<textarea placeholder="Description" id="description" class="inputDescription" onkeydown="insertTab(event)"></textarea>');
+                $editor.val(descriptionContent);
+                $editorContainer.append($editor);
+                $editor.autosize();
+            },
+
+            /**
+             * Editeur de code.
+             */
+            ace: function() {
+                $('.editorsChoice li.aceEditor').addClass('active');
+                var $editor = $('<div id="aceEditor">');
+
+                $editorContainer.append($editor);
+                $editor.text(descriptionContent);
+                aceEditor = ace.edit("aceEditor");
+                aceEditor.setTheme("ace/theme/crimson_editor");
+
+                var heightUpdateFunction = function() {
+                    var newHeight =
+                            aceEditor.getSession().getScreenLength()
+                            * aceEditor.renderer.lineHeight
+                            + aceEditor.renderer.scrollBar.getWidth();
+
+                    newHeight = Math.max(newHeight, 100);
+
+                    $editorContainer.height(newHeight.toString() + "px");
+                    $editor.height(newHeight.toString() + "px");
+                    aceEditor.resize();
+                };
+
+                heightUpdateFunction();
+                aceEditor.getSession().on('change', heightUpdateFunction);
+
+                var modes = {
+                    'php': new RegExp('(<\?php|lang:PHP)'),
+                    'javascript': new RegExp('lang:JS'),
+                    'markdown': new RegExp('lang:MKDOWN')
+                };
+
+                var mode = null;
+                for(var k in modes) {
+                    if(descriptionContent.match(modes[k])) {
+                        mode = k;
+                    }
+                }
+
+                if(mode !== null) {
+                    aceEditor.getSession().setMode("ace/mode/" + mode);
+                }
+
+                aceEditor.focus();
+            },
+
+            /**
+             * Editeur markdown.
+             */
+            markdown: function() {
+                $('.editorsChoice li.markdownEditor').addClass('active');
+
+                var $row = $('<div class="row"></div>');
+                $editorContainer.append($row);
+
+                var $editor = $('<div id="aceEditor" class="col-lg-6">');
+                $editor.text(descriptionContent);
+                $row.append($editor);
+                
+                var $previewMarkdown = $('<div id="previewMarkdown" style="overflow: auto; border: 1px solid #dadada;"></div>');
+                $row.append($('<div class="col-lg-6" style="float:right;">').append($previewMarkdown));
+                
+                if(aceEditor !== null) {
+                    aceEditor.getSession().off('change');
+                    aceEditor.destroy();
+                }
+
+                aceEditor = ace.edit("aceEditor");
+                aceEditor.setTheme("ace/theme/crimson_editor");
+
+                var descriptionChangeHandler = function(event) {
+                    if(event) event.preventDefault();
+                    var converter = new Showdown.converter();
+                    $previewMarkdown.html(converter.makeHtml(that.getDescriptionContent()));
+                };
+
+                aceEditor.getSession().on('change', descriptionChangeHandler);
+                setTimeout(descriptionChangeHandler(), 0);
+
+                var heightUpdateFunction = function() {
+                    var newHeight =
+                            aceEditor.getSession().getScreenLength()
+                            * aceEditor.renderer.lineHeight
+                            + aceEditor.renderer.scrollBar.getWidth();
+
+                    newHeight = Math.max(newHeight, 100);
+                    $previewMarkdown.css('height', (newHeight + 2).toString() + "px");
+
+                    $editorContainer.height(newHeight.toString() + "px");
+                    $editor.height(newHeight.toString() + "px");
+                    aceEditor.resize();
+                };
+
+                heightUpdateFunction();
+                aceEditor.getSession().on('change', heightUpdateFunction);
+
+                var modes = {
+                    'php': new RegExp('(<\?php|lang:PHP)'),
+                    'javascript': new RegExp('lang:JS'),
+                    'markdown': new RegExp('lang:MKDOWN')
+                };
+
+                var mode = null;
+                for(var k in modes) {
+                    if(descriptionContent.match(modes[k])) {
+                        mode = k;
+                    }
+                }
+
+                if(mode !== null) {
+                    console.log(mode);
+                    aceEditor.getSession().setMode("ace/mode/" + mode);
+                }
+
+                aceEditor.focus();
+            }
+        }
+
+        currentEditorType = editor;
+        editorsInit[editor]();
+    };
+
+    /**
+     * Retourne le contenu actuel de l'éditeur.
+     * @returns string
+     */
+    that.getDescriptionContent = function() {
+        var strategies = {
+            simple: function() { return $('#description').val(); },
+            ace: function() { return aceEditor.getSession().getValue(); },
+            markdown: function() { return aceEditor.getSession().getValue(); }
+        };
+
+        return strategies[currentEditorType]();
     };
 
     /**
@@ -72,7 +242,7 @@ var Note = function($container, options) {
         var data = {
             id: options.id,
             titre: $('#titre').val(),
-            note: $('#description').val(),
+            note: that.getDescriptionContent(),
             parentId: $('#parents').val(),
             prochaine: $('.prochaine input').is(':checked'),
             enAttente: $('.attente input').is(':checked'),

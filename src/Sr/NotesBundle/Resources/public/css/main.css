@@ -197,3 +197,19 @@ table.liste th {
 div.tagsinput { padding: 1px 0; border: 0; }
 div.tagsinput input { padding: 1px 3px; }
 div.tagsinput span.tag { padding: 1px 3px; }
+
+.editorContainer {
+    position: relative;
+    top: 0;
+    left: 0;
+    min-height: 100px;
+}
+
+#aceEditor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: 1px solid #dadada;
+}
