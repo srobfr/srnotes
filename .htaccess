@@ -4,5 +4,5 @@
 #AuthUserFile /yourPath/.htpasswd
 #require valid-user
 
-#RewriteEngine On
-#RewriteRule ^(.*)$ web/$1 [QSA,L]
+RewriteEngine On
+RewriteRule ^(.*)$ web/$1 [QSA,L]
