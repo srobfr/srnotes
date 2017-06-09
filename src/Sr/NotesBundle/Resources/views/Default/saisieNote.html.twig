@@ -3,11 +3,11 @@
 {# Utile pour afficher un preview Markdown #}
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/srnotes/js/showdown.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/srnotes/js/Note.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/srnotes/js/jquery.autosize.js') }}"></script>
-    <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+    <script type="text/javascript" src="//underscorejs.org/underscore-min.js"></script>
     <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/srnotes/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -15,8 +15,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Oxygen+Mono' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Oxygen+Mono' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block page %}
